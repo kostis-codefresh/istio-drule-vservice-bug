@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    app: demo-ag
+    application: demo-ag
+    bu: tech
+    cell: prod
+    dashlessCell: prod
+    environment: prod
+    product: pipeline
+    region: guse4
+    team: pipeline
+    track: primary
+  name: demo-ag-prod-primary-2
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: demo-ag
+      cell: prod
+      track: primary
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/excludeInboundPorts: "9443"
+        sidecar.istio.io/excludeOutboundPorts: "9443"
+      labels:
+        app: demo-ag
+        application: demo-ag
+        bu: tech
+        cell: prod
+        deployMode: normal
+        product: pipeline
+        team: pipeline
+        track: primary
+        # This label was previously primary
+        pcln.role: stable 
+    spec:
+      containers:
+        - name: demo-ag
+          image: kostiscodefresh/summer-of-k8s-app:v2      
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+            timeoutSeconds: 1
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+
+---
