@@ -14,7 +14,7 @@ metadata:
     region: guse4
     team: pipeline
     track: primary
-  name: demo-ag-prod-primary
+  name: demo-ag-prod-primary-2
 spec:
   revisionHistoryLimit: 0
   selector:
